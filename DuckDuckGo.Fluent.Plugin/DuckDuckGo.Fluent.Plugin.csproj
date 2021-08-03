@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0-windows10.0.19041</TargetFramework>
+        <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+            None
+        </ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+        <AssemblyVersion>1.0.0.0</AssemblyVersion>
+        <Platforms>AnyCPU;x64</Platforms>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Blast.API" Version="0.9.76.5-beta" />
+        <PackageReference Include="SoftCircuits.HtmlMonkey" Version="2.0.6" />
+        <PackageReference Include="TextCopy" Version="1.5.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="duck_logo.png" />
+      <EmbeddedResource Include="duck_logo.png" />
+    </ItemGroup>
+
+</Project>

@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31313.79
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DuckDuckGo.Fluent.Plugin", "DuckDuckGo.Fluent.Plugin\DuckDuckGo.Fluent.Plugin.csproj", "{5A1EB141-EA87-4A2C-9C20-5210478FE019}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5A1EB141-EA87-4A2C-9C20-5210478FE019}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A1EB141-EA87-4A2C-9C20-5210478FE019}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A1EB141-EA87-4A2C-9C20-5210478FE019}.Debug|x64.ActiveCfg = Debug|x64
+		{5A1EB141-EA87-4A2C-9C20-5210478FE019}.Debug|x64.Build.0 = Debug|x64
+		{5A1EB141-EA87-4A2C-9C20-5210478FE019}.Release|Any CPU.ActiveCfg = Release|x64
+		{5A1EB141-EA87-4A2C-9C20-5210478FE019}.Release|Any CPU.Build.0 = Release|x64
+		{5A1EB141-EA87-4A2C-9C20-5210478FE019}.Release|x64.ActiveCfg = Release|x64
+		{5A1EB141-EA87-4A2C-9C20-5210478FE019}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EC06B1A8-E13C-4C4F-BA82-402938F21DC6}
+	EndGlobalSection
+EndGlobal

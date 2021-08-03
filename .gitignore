@@ -1,0 +1,8 @@
+bin/
+obj/
+/packages/
+riderModule.iml
+/_ReSharper.Caches/
+/.idea
+*.suo
+.vs/DuckDuckGo.Fluent.Plugin/DesignTimeBuild/.dtbcache.v2

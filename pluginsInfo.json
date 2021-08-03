@@ -1,0 +1,14 @@
+{
+    "IsEnabled": true,
+    "InstalledVersion": "1.0.0.0",
+    "Name": "DuckInstantAnswers",
+    "DisplayName": "DuckDuckGo Preview",
+    "Description": "Show DuckDuckGo Instant Answers. Generate QR Codes from text.",
+    "PublisherName": "Makesh Vineeth",
+    "Version": "1.0.0.0",
+    "URL": "https://github.com/MakeshVineeth/DuckDuckGo.Fluent.Plugin",
+    "DownloadURL": "https://github.com/MakeshVineeth/DuckDuckGo.Fluent.Plugin/releases/download/",
+    "IconUrl": null,
+    "IconGlyph": "\uF78B",
+    "PreviewImage": null
+}

@@ -26,7 +26,7 @@ namespace DuckDuckGo.Fluent.Plugin
         }
 
 
-        public record Root
+        public record DuckDuckGoApiResult
         {
             public string AbstractText { get; set; }
             public string AbstractUrl { get; set; }

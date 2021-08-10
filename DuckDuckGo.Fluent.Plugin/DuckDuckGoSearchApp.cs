@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -55,8 +54,9 @@ namespace DuckDuckGo.Fluent.Plugin
         {
             string searchedTag = searchRequest.SearchedTag;
             string searchedText = searchRequest.SearchedText;
+            searchedText = searchedText.Trim();
 
-            if (!VerifySearchedTerms(ref searchedText, ref searchedTag)) yield break;
+            if (!VerifySearchedTerms(searchedText, searchedTag)) yield break;
 
             if (searchedTag.Equals(QrTag))
             {
@@ -70,15 +70,16 @@ namespace DuckDuckGo.Fluent.Plugin
                 using var httpClient = new HttpClient();
                 httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd(UserAgentString);
 
-                var root = await httpClient.GetFromJsonAsync<Root>(url, SerializerOptions, cancellationToken);
-                var duckResultFactory = DuckResultFactory.Create(root, searchedText);
+                var apiResult =
+                    await httpClient.GetFromJsonAsync<DuckDuckGoApiResult>(url, SerializerOptions, cancellationToken);
+                var duckResultFactory = DuckResultFactory.Create(apiResult, searchedText);
 
                 // Get Answers
                 DuckResult answers = duckResultFactory.GetAnswers();
                 if (answers != null) yield return GetISearchResult(answers);
 
                 // Get Definitions if available
-                DuckResult dictionary = duckResultFactory.GetDictionary();
+                DuckResult dictionary = duckResultFactory.GetDefinition();
                 if (dictionary != null) yield return GetISearchResult(dictionary);
 
                 // Get Abstract in Text form
@@ -88,11 +89,11 @@ namespace DuckDuckGo.Fluent.Plugin
 
                 // External Links associated with search like Official Website etc.
                 List<DuckResult> externalLinks = duckResultFactory.GetExternalLinks();
-                foreach (DuckResult externalLink in externalLinks) yield return GetISearchResult(externalLink);
+                foreach (DuckResult link in externalLinks) yield return GetISearchResult(link);
 
                 // Internal Links associated with Search.
-                List<DuckResult> internalLinks = duckResultFactory.GetRelatedSearch();
-                foreach (DuckResult internalLink in internalLinks) yield return GetISearchResult(internalLink);
+                List<DuckResult> internalLinks = duckResultFactory.GetRelatedTopics();
+                foreach (DuckResult link in internalLinks) yield return GetISearchResult(link);
             }
         }
 
@@ -100,8 +101,7 @@ namespace DuckDuckGo.Fluent.Plugin
         {
             var assembly = Assembly.GetExecutingAssembly();
             const string resourceName = "DuckDuckGo.Fluent.Plugin.duck_logo.png";
-            using Stream stream = assembly.GetManifestResourceStream(resourceName);
-            var image = new Bitmap(stream!);
+            var image = new Bitmap(assembly.GetManifestResourceStream(resourceName)!);
             _logoImage = new BitmapImageResult(image) { ScaleX = 1.3, ScaleY = 1.3 };
             return ValueTask.CompletedTask;
         }
@@ -135,13 +135,13 @@ namespace DuckDuckGo.Fluent.Plugin
             using var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd(UserAgentString);
             string url = GetEndpointUrl(duckResult.SearchedText);
-            var root = await httpClient.GetFromJsonAsync<Root>(url, SerializerOptions);
+            var root = await httpClient.GetFromJsonAsync<DuckDuckGoApiResult>(url, SerializerOptions);
             var duckResultFactory = DuckResultFactory.Create(root, duckResult.SearchedText);
 
             DuckResult result = duckResult.SearchResultType switch
             {
                 ResultType.Answer => duckResultFactory.GetAnswers(),
-                ResultType.Definition => duckResultFactory.GetDictionary(),
+                ResultType.Definition => duckResultFactory.GetDefinition(),
                 ResultType.Abstract => duckResultFactory.GetAbstract(),
                 ResultType.QrCode => null,
                 ResultType.SearchResult => duckResult,

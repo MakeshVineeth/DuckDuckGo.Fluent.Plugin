@@ -57,7 +57,6 @@ namespace DuckDuckGo.Fluent.Plugin
             base(DuckSearchTagName, resultName, searchedText, resultType, score,
                 supportedOperationCollections, SearchTags)
         {
-            IconGlyph = SearchResultIcon;
         }
 
         public override string Context => Url;

@@ -22,15 +22,6 @@ namespace DuckDuckGo.Fluent.Plugin
 {
     public class AppFunctions
     {
-        public enum ResultType
-        {
-            Answer,
-            Definition,
-            Abstract,
-            QrCode,
-            SearchResult
-        }
-
         private const string Endpoint = "https://api.duckduckgo.com/?q=";
         public const string DuckWebsiteUrl = "https://duckduckgo.com/";
 
@@ -39,10 +30,8 @@ namespace DuckDuckGo.Fluent.Plugin
             return Endpoint + WebUtility.UrlEncode(searchedText) + "&format=json&no_html=1";
         }
 
-        public static bool VerifySearchedTerms(ref string searchedText, ref string searchedTag)
+        public static bool VerifySearchedTerms(string searchedText, string searchedTag)
         {
-            searchedText = searchedText.Trim();
-
             if (string.IsNullOrWhiteSpace(searchedText)) return false;
 
             if (string.IsNullOrWhiteSpace(searchedTag)) return true;
@@ -56,15 +45,15 @@ namespace DuckDuckGo.Fluent.Plugin
             string url = Endpoint + "qrcode+" + WebUtility.UrlEncode(searchedText) + "&format=json";
             using var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd(UserAgentString);
-            var root = await httpClient.GetFromJsonAsync<Root>(url, SerializerOptions);
+            var apiResult = await httpClient.GetFromJsonAsync<DuckDuckGoApiResult>(url, SerializerOptions);
 
-            if (root == null) return null;
+            if (apiResult == null) return null;
 
             const string resultType = "QR";
 
-            if (!root.AnswerType.Equals("qrcode") || string.IsNullOrWhiteSpace(root.Answer)) return null;
+            if (!apiResult.AnswerType.Equals("qrcode") || string.IsNullOrWhiteSpace(apiResult.Answer)) return null;
 
-            string info = root.Answer;
+            string info = apiResult.Answer;
 
             BitmapImageResult bitmapImageResult;
             HtmlDocument document = HtmlDocument.FromHtml(info);
@@ -78,8 +67,8 @@ namespace DuckDuckGo.Fluent.Plugin
             else
             {
                 HtmlAttributeCollection htmlAttributeCollection = htmlElementNode.Attributes;
-                HtmlAttribute htmlAttribute = htmlAttributeCollection[0];
-                string base64String = htmlAttribute.Value;
+                HtmlAttribute htmlAttribute = htmlAttributeCollection.FirstOrDefault();
+                string base64String = htmlAttribute?.Value;
                 base64String = base64String?[(base64String.IndexOf(",", StringComparison.Ordinal) + 1)..];
                 byte[] imageBytes = Convert.FromBase64String(base64String!);
                 await using var mem = new MemoryStream(imageBytes);

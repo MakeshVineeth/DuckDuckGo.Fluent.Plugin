@@ -1,6 +1,4 @@
-﻿using static DuckDuckGo.Fluent.Plugin.AppFunctions;
-
-namespace DuckDuckGo.Fluent.Plugin
+﻿namespace DuckDuckGo.Fluent.Plugin
 {
     public class DuckResult
     {

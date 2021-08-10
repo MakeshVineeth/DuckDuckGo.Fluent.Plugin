@@ -6,8 +6,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Threading;
-using System.Threading.Channels;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Threading;
@@ -53,76 +51,6 @@ namespace DuckDuckGo.Fluent.Plugin
                    searchedTag.Equals(QrTag, StringComparison.Ordinal);
         }
 
-        public static async Task GetRelatedSearch(Root root, Channel<DuckResult> channel, string searchedText)
-        {
-            if (root?.RelatedTopics != null)
-                foreach (RelatedTopic variableTopic in root.RelatedTopics.Where(variableTopic =>
-                    variableTopic != null))
-                {
-                    if (!string.IsNullOrWhiteSpace(variableTopic.Text))
-                        await channel.Writer.WriteAsync(new DuckResult
-                        {
-                            Info = variableTopic.Text, SourceUrl = variableTopic.FirstUrl, ResultType = "Related",
-                            Score = 3,
-                            SearchResultType = ResultType.SearchResult, SearchedText = searchedText
-                        }, CancellationToken.None);
-
-                    if (variableTopic.Topics == null) continue;
-
-                    foreach (DuckResult duckResult in from topic in variableTopic.Topics
-                        where !string.IsNullOrWhiteSpace(topic?.Text)
-                        select new DuckResult
-                        {
-                            Info = topic.Text, SourceUrl = topic.FirstUrl,
-                            ResultType = variableTopic.Name, Score = 2, SearchResultType = ResultType.SearchResult,
-                            SearchedText = searchedText
-                        })
-                        await channel.Writer.WriteAsync(duckResult
-                            , CancellationToken.None);
-                }
-        }
-
-        public static DuckResult GetAnswers(Root root, string searchedText)
-        {
-            if (string.IsNullOrWhiteSpace(root?.Answer)) return null;
-
-            string resultType = root.AnswerType ?? "Answer";
-            DuckResult duckResult = new()
-            {
-                Info = root.Answer, ResultType = resultType, SearchResultType = ResultType.Answer,
-                SearchedText = searchedText, Score = 10
-            };
-
-            return duckResult;
-        }
-
-        public static DuckResult GetDictionary(Root root, string searchedText)
-        {
-            if (string.IsNullOrWhiteSpace(root?.Definition)) return null;
-
-            DuckResult duckResult = new()
-            {
-                Info = root.Definition, ResultType = "Define", SourceUrl = root.DefinitionUrl,
-                SearchResultType = ResultType.Definition, SearchedText = searchedText, Score = 9
-            };
-
-            return duckResult;
-        }
-
-        public static DuckResult GetAbstract(Root root, string searchedText)
-        {
-            if (string.IsNullOrWhiteSpace(root?.AbstractText)) return null;
-
-            DuckResult duckResult = new()
-            {
-                Info = root.AbstractText, ResultType = "Abstract", SourceUrl = root.AbstractUrl,
-                SearchResultType = ResultType.Abstract, SearchedText = searchedText,
-                Score = 8
-            };
-
-            return duckResult;
-        }
-
         public static async Task<DuckDuckGoSearchResult> GetQrImage(string searchedText)
         {
             string url = Endpoint + "qrcode+" + WebUtility.UrlEncode(searchedText) + "&format=json";
@@ -162,7 +90,7 @@ namespace DuckDuckGo.Fluent.Plugin
                 , QrOperations, 2)
             {
                 Url = searchedText,
-                SearchObjectId = new DuckResult {SearchedText = searchedText, SearchResultType = ResultType.QrCode},
+                SearchObjectId = new DuckResult { SearchedText = searchedText, SearchResultType = ResultType.QrCode },
                 PreviewImage = bitmapImageResult
             };
         }
@@ -183,7 +111,7 @@ namespace DuckDuckGo.Fluent.Plugin
 
                     string path = task.Result;
                     if (string.IsNullOrWhiteSpace(path)) return;
-                    if (duckGoSearchResult.PreviewImage is {IsEmpty: true}) return;
+                    if (duckGoSearchResult.PreviewImage is { IsEmpty: true }) return;
                     Bitmap bitmap = duckGoSearchResult.PreviewImage.ConvertToNormalBitmap();
                     bitmap.Save(path);
                     if (!File.Exists(path)) return;

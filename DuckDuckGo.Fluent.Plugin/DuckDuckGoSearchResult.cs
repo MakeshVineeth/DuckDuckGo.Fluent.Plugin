@@ -14,7 +14,9 @@ namespace DuckDuckGo.Fluent.Plugin
         public const string DuckSearchTagName = "duck";
         public const string DuckTagDescription = "Show DuckDuckGo Instant Answers";
         public const string SearchResultIcon = "\uF78B";
-        private static readonly CopySearchOperation Copy = new("Copy URL") {Description = "Copies the URL to Clipboard."};
+
+        private static readonly CopySearchOperation Copy = new("Copy URL")
+            { Description = "Copies the URL to Clipboard." };
 
         public static readonly ObservableCollection<ISearchOperation> SearchOperations = new()
         {

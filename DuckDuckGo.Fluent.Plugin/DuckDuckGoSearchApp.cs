@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Net;
-using System.Net.Http;
-using System.Net.Http.Json;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
@@ -18,14 +16,13 @@ using TextCopy;
 using static DuckDuckGo.Fluent.Plugin.DuckDuckGoSearchResult;
 using static DuckDuckGo.Fluent.Plugin.JsonResult;
 using static DuckDuckGo.Fluent.Plugin.AppFunctions;
+using static DuckDuckGo.Fluent.Plugin.QrFunctions;
 
 namespace DuckDuckGo.Fluent.Plugin
 {
     internal class DuckDuckGoSearchApp : ISearchApplication
     {
         private const string SearchAppName = "DuckDuckGo Instant Answers";
-        public const string UserAgentString = "Mozilla/5.0 (Windows NT 10.0; Win64; x64)";
-        public static readonly JsonSerializerOptions SerializerOptions = new() { PropertyNameCaseInsensitive = true };
         private readonly SearchApplicationInfo _applicationInfo;
         private BitmapImageResult _logoImage;
 
@@ -67,11 +64,10 @@ namespace DuckDuckGo.Fluent.Plugin
             else
             {
                 string url = GetEndpointUrl(searchedText);
-                using var httpClient = new HttpClient();
-                httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd(UserAgentString);
+                DuckDuckGoApiResult apiResult = await HttpCalls.GetApiResult(url);
 
-                var apiResult =
-                    await httpClient.GetFromJsonAsync<DuckDuckGoApiResult>(url, SerializerOptions, cancellationToken);
+                if (apiResult == null) yield break;
+
                 var duckResultFactory = DuckResultFactory.Create(apiResult, searchedText);
 
                 // Get Answers
@@ -132,11 +128,9 @@ namespace DuckDuckGo.Fluent.Plugin
                 }
             }
 
-            using var httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd(UserAgentString);
             string url = GetEndpointUrl(duckResult.SearchedText);
-            var root = await httpClient.GetFromJsonAsync<DuckDuckGoApiResult>(url, SerializerOptions);
-            var duckResultFactory = DuckResultFactory.Create(root, duckResult.SearchedText);
+            DuckDuckGoApiResult apiResult = await HttpCalls.GetApiResult(url);
+            var duckResultFactory = DuckResultFactory.Create(apiResult, duckResult.SearchedText);
 
             DuckResult result = duckResult.SearchResultType switch
             {

@@ -130,6 +130,9 @@ namespace DuckDuckGo.Fluent.Plugin
 
             string url = GetEndpointUrl(duckResult.SearchedText);
             DuckDuckGoApiResult apiResult = await HttpCalls.GetApiResult(url);
+
+            if (apiResult == null) return default;
+
             var duckResultFactory = DuckResultFactory.Create(apiResult, duckResult.SearchedText);
 
             DuckResult result = duckResult.SearchResultType switch

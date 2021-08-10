@@ -21,7 +21,7 @@ namespace DuckDuckGo.Fluent.Plugin
     {
         public static async Task<DuckDuckGoSearchResult> GetQrImage(string searchedText)
         {
-            string url = GetEndpointUrl(searchedText);
+            string url = GetEndpointUrl(searchedText, true);
             DuckDuckGoApiResult apiResult = await HttpCalls.GetApiResult(url);
 
             if (apiResult == null) return null;

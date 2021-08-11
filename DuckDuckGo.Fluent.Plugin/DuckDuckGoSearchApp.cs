@@ -51,11 +51,11 @@ namespace DuckDuckGo.Fluent.Plugin
         {
             string searchedTag = searchRequest.SearchedTag;
             string searchedText = searchRequest.SearchedText;
-            searchedText = searchedText.Trim();
 
             if (!VerifySearchedTerms(searchedText, searchedTag)) yield break;
+            searchedText = searchedText.Trim();
 
-            if (searchedTag.Equals(QrTag))
+            if (!string.IsNullOrWhiteSpace(searchedTag) && searchedTag.Equals(QrTag))
             {
                 DuckDuckGoSearchResult duckGoSearchResult = await GetQrImage(searchedText);
                 if (duckGoSearchResult != null)

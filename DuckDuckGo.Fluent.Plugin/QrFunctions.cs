@@ -51,8 +51,7 @@ namespace DuckDuckGo.Fluent.Plugin
                 string base64String = htmlAttribute.Value;
                 base64String = base64String?[(base64String.IndexOf(",", StringComparison.Ordinal) + 1)..];
                 byte[] imageBytes = Convert.FromBase64String(base64String!);
-                await using var mem = new MemoryStream(imageBytes);
-                bitmapImageResult = new BitmapImageResult(mem);
+                bitmapImageResult = new BitmapImageResult(new MemoryStream(imageBytes));
             }
 
             return new DuckDuckGoSearchResult(searchedText, searchedText, resultType

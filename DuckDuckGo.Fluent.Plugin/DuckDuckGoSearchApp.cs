@@ -141,14 +141,12 @@ namespace DuckDuckGo.Fluent.Plugin
 
             if (result == null) return default;
 
-            DuckDuckGoSearchResult duckDuckGoSearchResult =
-                new(result.Info, result.SearchedText, result.ResultType, DuckOperations, result.Score)
-                {
-                    Url = result.SourceUrl, AdditionalInformation = result.SourceUrl, SearchObjectId = result,
-                    PreviewImage = _logoImage
-                };
-
-            return duckDuckGoSearchResult;
+            return new DuckDuckGoSearchResult(result.Info, result.SearchedText, result.ResultType, DuckOperations,
+                result.Score)
+            {
+                Url = result.SourceUrl, AdditionalInformation = result.SourceUrl, SearchObjectId = result,
+                PreviewImage = _logoImage
+            };
         }
 
         public ValueTask<IHandleResult> HandleSearchResult(ISearchResult searchResult)

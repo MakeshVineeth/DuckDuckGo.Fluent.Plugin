@@ -68,28 +68,28 @@ namespace DuckDuckGo.Fluent.Plugin
 
                 if (apiResult == null) yield break;
 
-                var duckResultFactory = DuckResultFactory.Create(apiResult, searchedText, _logoImage);
+                var duckResultFactory = DuckResultFactory.Create(apiResult, searchedText);
 
                 // Get Answers
                 DuckResult answers = duckResultFactory.GetAnswers();
-                if (answers != null) yield return duckResultFactory.GetISearchResult(answers);
+                if (answers != null) yield return GetISearchResult(answers);
 
                 // Get Definitions if available
                 DuckResult dictionary = duckResultFactory.GetDefinition();
-                if (dictionary != null) yield return duckResultFactory.GetISearchResult(dictionary);
+                if (dictionary != null) yield return GetISearchResult(dictionary);
 
                 // Get Abstract in Text form
                 DuckResult abstractResult = duckResultFactory.GetAbstract();
                 if (abstractResult != null)
-                    yield return duckResultFactory.GetISearchResult(abstractResult);
+                    yield return GetISearchResult(abstractResult);
 
                 // External Links associated with search like Official Website etc.
                 List<DuckResult> externalLinks = duckResultFactory.GetExternalLinks();
-                foreach (DuckResult link in externalLinks) yield return duckResultFactory.GetISearchResult(link);
+                foreach (DuckResult link in externalLinks) yield return GetISearchResult(link);
 
                 // Internal Links associated with Search.
                 List<DuckResult> internalLinks = duckResultFactory.GetRelatedTopics();
-                foreach (DuckResult link in internalLinks) yield return duckResultFactory.GetISearchResult(link);
+                foreach (DuckResult link in internalLinks) yield return GetISearchResult(link);
             }
         }
 
@@ -104,18 +104,12 @@ namespace DuckDuckGo.Fluent.Plugin
 
         public async ValueTask<ISearchResult> GetSearchResultForId(object searchObjectId)
         {
-            DuckResult duckResult;
-            switch (searchObjectId)
+            DuckResult duckResult = searchObjectId switch
             {
-                case string json:
-                    duckResult = JsonSerializer.Deserialize<DuckResult>(json);
-                    break;
-                case DuckResult objectId:
-                    duckResult = objectId;
-                    break;
-                default:
-                    return default;
-            }
+                string json => JsonSerializer.Deserialize<DuckResult>(json),
+                DuckResult objectId => objectId,
+                _ => null
+            };
 
             switch (duckResult)
             {
@@ -133,7 +127,7 @@ namespace DuckDuckGo.Fluent.Plugin
 
             if (apiResult == null) return default;
 
-            var duckResultFactory = DuckResultFactory.Create(apiResult, duckResult.SearchedText, _logoImage);
+            var duckResultFactory = DuckResultFactory.Create(apiResult, duckResult.SearchedText);
 
             DuckResult result = duckResult.SearchResultType switch
             {
@@ -193,6 +187,16 @@ namespace DuckDuckGo.Fluent.Plugin
             }
 
             return new ValueTask<IHandleResult>(new HandleResult(true, false));
+        }
+
+        private DuckDuckGoSearchResult GetISearchResult(DuckResult duckResult)
+        {
+            return new DuckDuckGoSearchResult(duckResult.Info, duckResult.SearchedText, duckResult.ResultType,
+                DuckOperations, duckResult.Score)
+            {
+                Url = duckResult.SourceUrl, AdditionalInformation = duckResult.SourceUrl,
+                SearchObjectId = duckResult, PreviewImage = _logoImage
+            };
         }
     }
 }

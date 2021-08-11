@@ -1,28 +1,23 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Blast.Core.Results;
 using static DuckDuckGo.Fluent.Plugin.JsonResult;
-using static DuckDuckGo.Fluent.Plugin.DuckDuckGoSearchResult;
 
 namespace DuckDuckGo.Fluent.Plugin
 {
     public class DuckResultFactory
     {
         private readonly DuckDuckGoApiResult _apiResult;
-        private readonly BitmapImageResult _logoImage;
         private readonly string _searchedText;
 
-        private DuckResultFactory(DuckDuckGoApiResult apiResult, string searchedText, BitmapImageResult logoImage)
+        private DuckResultFactory(DuckDuckGoApiResult apiResult, string searchedText)
         {
             _apiResult = apiResult;
             _searchedText = searchedText;
-            _logoImage = logoImage;
         }
 
-        public static DuckResultFactory Create(DuckDuckGoApiResult root, string searchedText,
-            BitmapImageResult logoImage)
+        public static DuckResultFactory Create(DuckDuckGoApiResult root, string searchedText)
         {
-            return new DuckResultFactory(root, searchedText, logoImage);
+            return new DuckResultFactory(root, searchedText);
         }
 
         public DuckResult GetAnswers()
@@ -101,16 +96,6 @@ namespace DuckDuckGo.Fluent.Plugin
                 Score = score,
                 SourceUrl = sourceUrl,
                 SearchedText = _searchedText
-            };
-        }
-
-        public DuckDuckGoSearchResult GetISearchResult(DuckResult duckResult)
-        {
-            return new DuckDuckGoSearchResult(duckResult.Info, _searchedText, duckResult.ResultType,
-                DuckOperations, duckResult.Score)
-            {
-                Url = duckResult.SourceUrl, AdditionalInformation = duckResult.SourceUrl,
-                SearchObjectId = duckResult, PreviewImage = _logoImage
             };
         }
     }

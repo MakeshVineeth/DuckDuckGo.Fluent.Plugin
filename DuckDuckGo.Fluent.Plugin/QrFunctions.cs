@@ -66,6 +66,8 @@ namespace DuckDuckGo.Fluent.Plugin
 
         public static void SaveQrImage(DuckDuckGoSearchResult duckGoSearchResult)
         {
+            if (duckGoSearchResult.PreviewImage is { IsEmpty: true }) return;
+
             Dispatcher.UIThread.Post(() =>
             {
                 var saveFileDialog = new SaveFileDialog
@@ -80,7 +82,6 @@ namespace DuckDuckGo.Fluent.Plugin
 
                     string path = task.Result;
                     if (string.IsNullOrWhiteSpace(path)) return;
-                    if (duckGoSearchResult.PreviewImage is { IsEmpty: true }) return;
                     Bitmap bitmap = duckGoSearchResult.PreviewImage.ConvertToNormalBitmap();
                     bitmap.Save(path);
                     if (!File.Exists(path)) return;

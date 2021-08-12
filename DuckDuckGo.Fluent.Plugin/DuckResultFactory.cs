@@ -24,21 +24,23 @@ namespace DuckDuckGo.Fluent.Plugin
         {
             if (string.IsNullOrWhiteSpace(_apiResult.Answer)) return null;
             string resultType = _apiResult.AnswerType ?? "Answer";
-            return CreateDuckResult(_apiResult.Answer, resultType, null, ResultType.Answer, 10);
+            return CreateDuckResult(_apiResult.Answer, resultType, null, ResultType.Answer, true);
         }
 
         public DuckResult GetDefinition()
         {
             return string.IsNullOrWhiteSpace(_apiResult.Definition)
                 ? null
-                : CreateDuckResult(_apiResult.Definition, "Define", _apiResult.DefinitionUrl, ResultType.Definition, 9);
+                : CreateDuckResult(_apiResult.Definition, "Define", _apiResult.DefinitionUrl, ResultType.Definition,
+                    true);
         }
 
         public DuckResult GetAbstract()
         {
             return string.IsNullOrWhiteSpace(_apiResult.AbstractText)
                 ? null
-                : CreateDuckResult(_apiResult.AbstractText, "Abstract", _apiResult.AbstractUrl, ResultType.Abstract, 8);
+                : CreateDuckResult(_apiResult.AbstractText, "Abstract", _apiResult.AbstractUrl, ResultType.Abstract,
+                    true);
         }
 
         public List<DuckResult> GetRelatedTopics()
@@ -51,7 +53,7 @@ namespace DuckDuckGo.Fluent.Plugin
             {
                 if (!string.IsNullOrWhiteSpace(variableTopic.Text))
                     list.Add(CreateDuckResult(variableTopic.Text, "Related", variableTopic.FirstUrl,
-                        ResultType.SearchResult, 3));
+                        ResultType.SearchResult));
 
                 if (variableTopic.Topics == null) continue;
 
@@ -59,8 +61,7 @@ namespace DuckDuckGo.Fluent.Plugin
                     topic.Text,
                     variableTopic.Name,
                     topic.FirstUrl,
-                    ResultType.SearchResult,
-                    2
+                    ResultType.SearchResult
                 )));
             }
 
@@ -72,30 +73,24 @@ namespace DuckDuckGo.Fluent.Plugin
             var list = new List<DuckResult>();
             if (_apiResult.Results == null) return list;
 
-            list.AddRange(_apiResult.Results.Select(externalTopic => new DuckResult
-            {
-                Info = externalTopic.Text,
-                SourceUrl = externalTopic.FirstUrl,
-                ResultType = "Links",
-                SearchedText = _searchedText,
-                SearchResultType = ResultType.SearchResult,
-                Score = 7
-            }));
+            list.AddRange(_apiResult.Results.Select(externalTopic =>
+                CreateDuckResult(externalTopic.Text, "Links", externalTopic.FirstUrl, ResultType.SearchResult)
+            ));
 
             return list;
         }
 
         private DuckResult CreateDuckResult(string info, string resultType, string sourceUrl,
-            ResultType searchResultType, double score)
+            ResultType searchResultType, bool isPinned = false)
         {
             return new DuckResult
             {
                 Info = info,
                 ResultType = resultType,
                 SearchResultType = searchResultType,
-                Score = score,
                 SourceUrl = sourceUrl,
-                SearchedText = _searchedText
+                SearchedText = _searchedText,
+                IsPinned = isPinned
             };
         }
     }

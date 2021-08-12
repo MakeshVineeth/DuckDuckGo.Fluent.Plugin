@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Blast.API.Core.Processes;
 using Blast.API.Processes;
+using Blast.API.Search;
 using Blast.Core.Interfaces;
 using Blast.Core.Objects;
 using Blast.Core.Results;
@@ -139,14 +140,7 @@ namespace DuckDuckGo.Fluent.Plugin
                 _ => null
             };
 
-            if (result == null) return default;
-
-            return new DuckDuckGoSearchResult(result.Info, result.SearchedText, result.ResultType, DuckOperations,
-                result.Score)
-            {
-                Url = result.SourceUrl, AdditionalInformation = result.SourceUrl, SearchObjectId = result,
-                PreviewImage = _logoImage
-            };
+            return result == null ? default(ISearchResult) : GetISearchResult(result);
         }
 
         public ValueTask<IHandleResult> HandleSearchResult(ISearchResult searchResult)
@@ -194,11 +188,12 @@ namespace DuckDuckGo.Fluent.Plugin
 
         private DuckDuckGoSearchResult GetISearchResult(DuckResult duckResult)
         {
+            double score = duckResult.Info.SearchDistanceScore(duckResult.SearchedText);
             return new DuckDuckGoSearchResult(duckResult.Info, duckResult.SearchedText, duckResult.ResultType,
-                DuckOperations, duckResult.Score)
+                DuckOperations, score)
             {
                 Url = duckResult.SourceUrl, AdditionalInformation = duckResult.SourceUrl,
-                SearchObjectId = duckResult, PreviewImage = _logoImage
+                SearchObjectId = duckResult, PreviewImage = _logoImage, IsPinned = duckResult.IsPinned
             };
         }
     }

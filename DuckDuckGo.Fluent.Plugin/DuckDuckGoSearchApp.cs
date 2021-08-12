@@ -178,10 +178,15 @@ namespace DuckDuckGo.Fluent.Plugin
                         return default;
                 }
             }
-            else
+            else if (duckGoSearchResult.SelectedOperation.OperationName == Copy.OperationName)
             {
                 if (!string.IsNullOrWhiteSpace(url))
                     Clipboard.SetText(url);
+            }
+            else if (duckGoSearchResult.SelectedOperation.OperationName == CopyContents.OperationName)
+            {
+                if (!string.IsNullOrWhiteSpace(duckGoSearchResult.ResultName))
+                    Clipboard.SetText(duckGoSearchResult.ResultName);
             }
 
             return new ValueTask<IHandleResult>(new HandleResult(true, false));

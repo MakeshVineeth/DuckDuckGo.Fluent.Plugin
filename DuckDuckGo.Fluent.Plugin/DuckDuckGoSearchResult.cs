@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Avalonia.Input;
 using Blast.API.Search.SearchOperations;
 using Blast.Core.Interfaces;
 using Blast.Core.Results;
@@ -15,8 +16,8 @@ namespace DuckDuckGo.Fluent.Plugin
         public const string DuckTagDescription = "Show DuckDuckGo Instant Answers";
         public const string SearchResultIcon = "\uF78B";
 
-        public static readonly CopySearchOperation Copy = new("Copy URL")
-            { Description = "Copies the URL to Clipboard." };
+        public static readonly CopySearchOperation CopyUrl = new("Copy URL")
+            { Description = "Copies the URL to Clipboard.", KeyGesture = new KeyGesture(Key.None) };
 
         public static readonly CopySearchOperation CopyContents = new("Copy Contents")
         {
@@ -26,7 +27,7 @@ namespace DuckDuckGo.Fluent.Plugin
         public static readonly ObservableCollection<ISearchOperation> SearchOperations = new()
         {
             OpenDuck,
-            Copy,
+            CopyUrl,
             SaveImageOperation,
             CopyContents
         };
@@ -34,7 +35,7 @@ namespace DuckDuckGo.Fluent.Plugin
         public static readonly ObservableCollection<ISearchOperation> DuckOperations = new()
         {
             OpenDuck,
-            Copy,
+            CopyUrl,
             CopyContents
         };
 

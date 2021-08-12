@@ -178,7 +178,7 @@ namespace DuckDuckGo.Fluent.Plugin
                         return default;
                 }
             }
-            else if (duckGoSearchResult.SelectedOperation.OperationName == Copy.OperationName)
+            else if (duckGoSearchResult.SelectedOperation.OperationName == CopyUrl.OperationName)
             {
                 if (!string.IsNullOrWhiteSpace(url))
                     Clipboard.SetText(url);

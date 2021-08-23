@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ namespace DuckDuckGo.Fluent.Plugin
         public static async Task<DuckDuckGoApiResult> GetApiResult(string url)
         {
             using var httpClient = new HttpClient();
+            httpClient.Timeout = TimeSpan.FromSeconds(20);
             httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd(UserAgentString);
             return await httpClient.GetFromJsonAsync<DuckDuckGoApiResult>(url, SerializerOptions);
         }

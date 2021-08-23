@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Net;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
@@ -149,10 +148,6 @@ namespace DuckDuckGo.Fluent.Plugin
                 throw new InvalidCastException(nameof(DuckDuckGoSearchResult));
 
             string url = duckGoSearchResult.Url;
-            string searchedTerm = duckGoSearchResult.SearchedText;
-
-            if (string.IsNullOrWhiteSpace(url) && !string.IsNullOrWhiteSpace(searchedTerm))
-                url = DuckWebsiteUrl + "?q=" + WebUtility.UrlEncode(searchedTerm);
 
             if (duckGoSearchResult.SelectedOperation is DuckDuckGoSearchOperations duckGoSearchOperations)
             {
@@ -190,10 +185,10 @@ namespace DuckDuckGo.Fluent.Plugin
         {
             double score = duckResult.Info.SearchDistanceScore(duckResult.SearchedText);
             return new DuckDuckGoSearchResult(duckResult.Info, duckResult.SearchedText, duckResult.ResultType,
-                DuckOperations, score)
+                DuckOperations, score, duckResult)
             {
                 Url = duckResult.SourceUrl, AdditionalInformation = duckResult.SourceUrl,
-                SearchObjectId = duckResult, PreviewImage = _logoImage, IsPinned = duckResult.IsPinned
+                PreviewImage = _logoImage, IsPinned = duckResult.IsPinned
             };
         }
     }

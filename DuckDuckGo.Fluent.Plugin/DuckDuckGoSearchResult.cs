@@ -61,10 +61,11 @@ namespace DuckDuckGo.Fluent.Plugin
         };
 
         public DuckDuckGoSearchResult(string resultName, string searchedText, string resultType,
-            IList<ISearchOperation> supportedOperationCollections, double score) :
+            IList<ISearchOperation> supportedOperationCollections, double score, DuckResult duckResult) :
             base(DuckSearchTagName, resultName, searchedText, resultType, score,
                 supportedOperationCollections, SearchTags)
         {
+            SearchObjectId = duckResult;
         }
 
         public override string Context => Url;

@@ -54,11 +54,16 @@ namespace DuckDuckGo.Fluent.Plugin
                 bitmapImageResult = new BitmapImageResult(new MemoryStream(imageBytes));
             }
 
+            var duckResult = new DuckResult
+            {
+                SearchedText = searchedText, SearchResultType = ResultType.QrCode,
+                SourceUrl = GetGeneralizedUrl("qr code for " + searchedText)
+            };
+
             return new DuckDuckGoSearchResult(searchedText, searchedText, resultType
-                , QrOperations, 2)
+                , QrOperations, 2, duckResult)
             {
                 Url = searchedText,
-                SearchObjectId = new DuckResult { SearchedText = searchedText, SearchResultType = ResultType.QrCode },
                 PreviewImage = bitmapImageResult
             };
         }

@@ -6,7 +6,7 @@ namespace DuckDuckGo.Fluent.Plugin
 {
     public class AppFunctions
     {
-        public const string DuckWebsiteUrl = "https://duckduckgo.com/";
+        private const string DuckWebsiteUrl = "https://duckduckgo.com/";
 
         public static string GetEndpointUrl(string searchedText, bool isQr = false)
         {
@@ -27,6 +27,11 @@ namespace DuckDuckGo.Fluent.Plugin
 
             return searchedTag.Equals(DuckSearchTagName, StringComparison.Ordinal) ||
                    searchedTag.Equals(QrTag, StringComparison.Ordinal);
+        }
+
+        public static string GetGeneralizedUrl(string searchedText)
+        {
+            return DuckWebsiteUrl + "?q=" + WebUtility.UrlEncode(searchedText);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using static DuckDuckGo.Fluent.Plugin.JsonResult;
+using static  DuckDuckGo.Fluent.Plugin.AppFunctions;
 
 namespace DuckDuckGo.Fluent.Plugin
 {
@@ -83,6 +84,9 @@ namespace DuckDuckGo.Fluent.Plugin
         private DuckResult CreateDuckResult(string info, string resultType, string sourceUrl,
             ResultType searchResultType, bool isPinned = false)
         {
+            if (string.IsNullOrWhiteSpace(sourceUrl) && !string.IsNullOrWhiteSpace(_searchedText))
+                sourceUrl = GetGeneralizedUrl(_searchedText);
+
             return new DuckResult
             {
                 Info = info,

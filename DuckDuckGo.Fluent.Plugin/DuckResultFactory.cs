@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using static DuckDuckGo.Fluent.Plugin.JsonResult;
-using static  DuckDuckGo.Fluent.Plugin.AppFunctions;
+using static DuckDuckGo.Fluent.Plugin.AppFunctions;
 
 namespace DuckDuckGo.Fluent.Plugin
 {

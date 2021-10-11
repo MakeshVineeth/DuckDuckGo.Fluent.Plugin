@@ -98,7 +98,7 @@ namespace DuckDuckGo.Fluent.Plugin
             var assembly = Assembly.GetExecutingAssembly();
             const string resourceName = "DuckDuckGo.Fluent.Plugin.duck_logo.png";
             var image = new Bitmap(assembly.GetManifestResourceStream(resourceName)!);
-            _logoImage = new BitmapImageResult(image) { ScaleX = 1.3, ScaleY = 1.3 };
+            _logoImage = new BitmapImageResult(image);
             return ValueTask.CompletedTask;
         }
 

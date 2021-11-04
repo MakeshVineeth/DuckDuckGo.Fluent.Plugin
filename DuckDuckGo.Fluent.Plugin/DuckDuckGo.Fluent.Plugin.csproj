@@ -2,19 +2,18 @@
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
-        <AssemblyVersion>1.0.0.0</AssemblyVersion>
+        <AssemblyVersion>2.0.0.0</AssemblyVersion>
         <Platforms>AnyCPU;x64</Platforms>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Blast.API" Version="0.9.89.1-beta"/>
-        <PackageReference Include="SoftCircuits.HtmlMonkey" Version="2.0.6"/>
-        <PackageReference Include="TextCopy" Version="1.5.1"/>
+        <PackageReference Include="Blast.API" Version="0.9.89.9990-beta" />
+        <PackageReference Include="SoftCircuits.HtmlMonkey" Version="2.0.6" />
+        <PackageReference Include="TextCopy" Version="1.5.1" />
     </ItemGroup>
 
     <ItemGroup>
-        <None Remove="duck_logo.png"/>
-        <EmbeddedResource Include="duck_logo.png"/>
+        <EmbeddedResource Include="duck_logo.png" />
     </ItemGroup>
 
 </Project>

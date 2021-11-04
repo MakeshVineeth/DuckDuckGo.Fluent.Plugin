@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Avalonia.Media.Imaging;
 using Blast.API.Core.Processes;
 using Blast.API.Processes;
 using Blast.API.Search;
@@ -131,7 +131,7 @@ namespace DuckDuckGo.Fluent.Plugin
 
             DuckResult result = duckResult.SearchResultType switch
             {
-                ResultType.Answer => duckResultFactory.GetAnswers(),
+                ResultType.Answer => duckResult, // Answers will often have numerical computations and are not suitable for custom tags as they often update very frequently.
                 ResultType.Definition => duckResultFactory.GetDefinition(),
                 ResultType.Abstract => duckResultFactory.GetAbstract(),
                 ResultType.QrCode => null,

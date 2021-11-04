@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using Blast.API.Core.Processes;
 using Blast.API.Graphics;
@@ -86,7 +86,7 @@ namespace DuckDuckGo.Fluent.Plugin
 
                     string path = task.Result;
                     if (string.IsNullOrWhiteSpace(path)) return;
-                    Bitmap bitmap = duckGoSearchResult.PreviewImage.ConvertToNormalBitmap();
+                    Bitmap bitmap = duckGoSearchResult.PreviewImage.ConvertToAvaloniaBitmap();
                     bitmap.Save(path);
                     if (!File.Exists(path)) return;
                     IProcessManager managerInstance = ProcessUtils.GetManagerInstance();

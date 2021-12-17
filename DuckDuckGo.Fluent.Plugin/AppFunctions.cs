@@ -19,14 +19,15 @@ namespace DuckDuckGo.Fluent.Plugin
                 : endpoint + encodedSearch + formatJson + "&no_html=1";
         }
 
-        public static bool VerifySearchedTerms(string searchedText, string searchedTag)
+        public static SearchAction VerifySearchedTerms(string searchedText, string searchedTag)
         {
-            if (string.IsNullOrWhiteSpace(searchedText)) return false;
+            if (string.IsNullOrWhiteSpace(searchedText)) return SearchAction.Null;
+            if (string.IsNullOrWhiteSpace(searchedTag)) return SearchAction.Null;
 
-            if (string.IsNullOrWhiteSpace(searchedTag)) return true;
+            if (searchedTag.Equals(DuckSearchTagName, StringComparison.Ordinal))
+                return SearchAction.Normal;
 
-            return searchedTag.Equals(DuckSearchTagName, StringComparison.Ordinal) ||
-                   searchedTag.Equals(QrTag, StringComparison.Ordinal);
+            return searchedTag.Equals(QrTag, StringComparison.Ordinal) ? SearchAction.QrCode : SearchAction.Null;
         }
 
         public static string GetGeneralizedUrl(string searchedText)

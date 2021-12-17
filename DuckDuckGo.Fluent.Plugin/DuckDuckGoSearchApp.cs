@@ -49,47 +49,50 @@ namespace DuckDuckGo.Fluent.Plugin
         public async IAsyncEnumerable<ISearchResult> SearchAsync(SearchRequest searchRequest,
             [EnumeratorCancellation] CancellationToken cancellationToken)
         {
-            string searchedTag = searchRequest.SearchedTag;
-            string searchedText = searchRequest.SearchedText;
+            string searchedTag = searchRequest.SearchedTag?.Trim();
+            string searchedText = searchRequest.SearchedText?.Trim();
 
-            if (!VerifySearchedTerms(searchedText, searchedTag)) yield break;
-            searchedText = searchedText.Trim();
-
-            if (!string.IsNullOrWhiteSpace(searchedTag) && searchedTag.Equals(QrTag))
+            SearchAction searchAction = VerifySearchedTerms(searchedText, searchedTag);
+            switch (searchAction)
             {
-                DuckDuckGoSearchResult duckGoSearchResult = await GetQrImage(searchedText);
-                if (duckGoSearchResult != null)
-                    yield return duckGoSearchResult;
-            }
-            else
-            {
-                string url = GetEndpointUrl(searchedText);
-                DuckDuckGoApiResult apiResult = await HttpCalls.GetApiResult(url);
+                case SearchAction.Normal:
+                    string url = GetEndpointUrl(searchedText);
+                    DuckDuckGoApiResult apiResult = await HttpCalls.GetApiResult(url);
 
-                if (apiResult == null) yield break;
+                    if (apiResult == null) yield break;
 
-                var duckResultFactory = DuckResultFactory.Create(apiResult, searchedText);
+                    var duckResultFactory = DuckResultFactory.Create(apiResult, searchedText);
 
-                // Get Answers
-                DuckResult answers = duckResultFactory.GetAnswers();
-                if (answers != null) yield return GetISearchResult(answers);
+                    // Get Answers
+                    DuckResult answers = duckResultFactory.GetAnswer();
+                    if (answers != null) yield return GetISearchResult(answers);
 
-                // Get Definitions if available
-                DuckResult dictionary = duckResultFactory.GetDefinition();
-                if (dictionary != null) yield return GetISearchResult(dictionary);
+                    // Get Definitions if available
+                    DuckResult dictionary = duckResultFactory.GetDefinition();
+                    if (dictionary != null) yield return GetISearchResult(dictionary);
 
-                // Get Abstract in Text form
-                DuckResult abstractResult = duckResultFactory.GetAbstract();
-                if (abstractResult != null)
-                    yield return GetISearchResult(abstractResult);
+                    // Get Abstract in Text form
+                    DuckResult abstractResult = duckResultFactory.GetAbstract();
+                    if (abstractResult != null)
+                        yield return GetISearchResult(abstractResult);
 
-                // External Links associated with search like Official Website etc.
-                List<DuckResult> externalLinks = duckResultFactory.GetExternalLinks();
-                foreach (DuckResult link in externalLinks) yield return GetISearchResult(link);
+                    // External Links associated with search like Official Website etc.
+                    List<DuckResult> externalLinks = duckResultFactory.GetExternalLinks();
+                    foreach (DuckResult link in externalLinks) yield return GetISearchResult(link);
 
-                // Internal Links associated with Search.
-                List<DuckResult> internalLinks = duckResultFactory.GetRelatedTopics();
-                foreach (DuckResult link in internalLinks) yield return GetISearchResult(link);
+                    // Internal Links associated with Search.
+                    IEnumerable<DuckResult> internalLinks = duckResultFactory.GetRelatedTopics();
+                    foreach (DuckResult link in internalLinks) yield return GetISearchResult(link);
+                    break;
+                case SearchAction.QrCode:
+                    DuckDuckGoSearchResult duckGoSearchResult = await GetQrImage(searchedText);
+                    if (duckGoSearchResult != null)
+                        yield return duckGoSearchResult;
+                    break;
+                case SearchAction.Null:
+                    yield break;
+                default:
+                    yield break;
             }
         }
 
@@ -149,7 +152,7 @@ namespace DuckDuckGo.Fluent.Plugin
 
             string url = duckGoSearchResult.Url;
 
-            if (duckGoSearchResult.SelectedOperation is DuckDuckGoSearchOperations duckGoSearchOperations)
+            if (duckGoSearchResult.SelectedOperation is DuckDuckGoSearchOperation duckGoSearchOperations)
             {
                 IProcessManager managerInstance = ProcessUtils.GetManagerInstance();
                 switch (duckGoSearchOperations.ActionType)

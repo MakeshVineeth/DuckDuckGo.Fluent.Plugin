@@ -21,7 +21,7 @@ namespace DuckDuckGo.Fluent.Plugin
             return new DuckResultFactory(root, searchedText);
         }
 
-        public DuckResult GetAnswers()
+        public DuckResult GetAnswer()
         {
             if (string.IsNullOrWhiteSpace(_apiResult.Answer)) return null;
             string resultType = _apiResult.AnswerType ?? "Answer";
@@ -44,29 +44,29 @@ namespace DuckDuckGo.Fluent.Plugin
                     true);
         }
 
-        public List<DuckResult> GetRelatedTopics()
+        public IEnumerable<DuckResult> GetRelatedTopics()
         {
-            var list = new List<DuckResult>();
-            if (_apiResult.RelatedTopics == null) return list;
+            if (_apiResult.RelatedTopics == null) yield break;
 
             foreach (RelatedTopic variableTopic in _apiResult.RelatedTopics.Where(variableTopic =>
-                variableTopic != null))
+                         variableTopic != null))
             {
                 if (!string.IsNullOrWhiteSpace(variableTopic.Text))
-                    list.Add(CreateDuckResult(variableTopic.Text, "Related", variableTopic.FirstUrl,
-                        ResultType.SearchResult));
+                    yield return CreateDuckResult(variableTopic.Text, "Related", variableTopic.FirstUrl,
+                        ResultType.SearchResult);
 
                 if (variableTopic.Topics == null) continue;
 
-                list.AddRange(variableTopic.Topics.Select(topic => CreateDuckResult(
-                    topic.Text,
-                    variableTopic.Name,
-                    topic.FirstUrl,
-                    ResultType.SearchResult
-                )));
+                foreach (Topic topic in variableTopic.Topics)
+                {
+                    yield return CreateDuckResult(
+                        topic.Text,
+                        variableTopic.Name,
+                        topic.FirstUrl,
+                        ResultType.SearchResult
+                    );
+                }
             }
-
-            return list;
         }
 
         public List<DuckResult> GetExternalLinks()

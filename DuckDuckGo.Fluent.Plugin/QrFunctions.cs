@@ -7,6 +7,7 @@ using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using Blast.API.Core.Processes;
+using Blast.API.Core.UI;
 using Blast.API.Graphics;
 using Blast.API.Processes;
 using Blast.Core.Results;
@@ -72,7 +73,7 @@ namespace DuckDuckGo.Fluent.Plugin
         {
             if (duckGoSearchResult.PreviewImage is { IsEmpty: true }) return;
 
-            Dispatcher.UIThread.Post(() =>
+            UiUtilities.UiDispatcher.Post(() =>
             {
                 var saveFileDialog = new SaveFileDialog
                 {

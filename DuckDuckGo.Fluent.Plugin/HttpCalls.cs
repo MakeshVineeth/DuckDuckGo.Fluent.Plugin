@@ -15,7 +15,7 @@ namespace DuckDuckGo.Fluent.Plugin
         public static async Task<DuckDuckGoApiResult> GetApiResult(string url)
         {
             using var httpClient = new HttpClient();
-            httpClient.Timeout = TimeSpan.FromSeconds(20);
+            httpClient.Timeout = TimeSpan.FromSeconds(5);
             httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd(UserAgentString);
             return await httpClient.GetFromJsonAsync<DuckDuckGoApiResult>(url, SerializerOptions);
         }

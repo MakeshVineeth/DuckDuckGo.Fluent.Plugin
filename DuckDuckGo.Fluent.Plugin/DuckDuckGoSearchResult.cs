@@ -4,7 +4,7 @@ using Avalonia.Input;
 using Blast.API.Search.SearchOperations;
 using Blast.Core.Interfaces;
 using Blast.Core.Results;
-using static DuckDuckGo.Fluent.Plugin.DuckDuckGoSearchOperations;
+using static DuckDuckGo.Fluent.Plugin.DuckDuckGoSearchOperation;
 
 namespace DuckDuckGo.Fluent.Plugin
 {

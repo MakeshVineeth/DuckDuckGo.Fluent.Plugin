@@ -8,9 +8,9 @@ namespace DuckDuckGo.Fluent.Plugin
         SaveImage
     }
 
-    public sealed class DuckDuckGoSearchOperations : SearchOperationBase
+    public sealed class DuckDuckGoSearchOperation : SearchOperationBase
     {
-        private DuckDuckGoSearchOperations(ActionType actionType, string actionName, string actionDescription,
+        private DuckDuckGoSearchOperation(ActionType actionType, string actionName, string actionDescription,
             string icon)
         {
             ActionType = actionType;
@@ -21,11 +21,11 @@ namespace DuckDuckGo.Fluent.Plugin
 
         public ActionType ActionType { get; }
 
-        public static DuckDuckGoSearchOperations OpenDuck { get; } =
+        public static DuckDuckGoSearchOperation OpenDuck { get; } =
             new(ActionType.OpenDuckDuckGo, "Open URL",
                 "Opens the URL. If URL is not available, Opens in DuckDuckGo.", "\uE8A7");
 
-        public static DuckDuckGoSearchOperations SaveImageOperation { get; } =
+        public static DuckDuckGoSearchOperation SaveImageOperation { get; } =
             new(ActionType.SaveImage, "Save Image", "Stores the Image using Save File Dialog.",
                 "\uE74E");
     }

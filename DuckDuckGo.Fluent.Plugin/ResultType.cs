@@ -1,11 +1,10 @@
-﻿namespace DuckDuckGo.Fluent.Plugin
+﻿namespace DuckDuckGo.Fluent.Plugin;
+
+public enum ResultType
 {
-    public enum ResultType
-    {
-        Answer,
-        Definition,
-        Abstract,
-        QrCode,
-        SearchResult
-    }
+    Answer,
+    Definition,
+    Abstract,
+    QrCode,
+    SearchResult
 }

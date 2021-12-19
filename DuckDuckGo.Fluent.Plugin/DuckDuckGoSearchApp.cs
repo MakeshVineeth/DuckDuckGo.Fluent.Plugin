@@ -166,7 +166,7 @@ internal class DuckDuckGoSearchApp : ISearchApplication
                     break;
 
                 case ActionType.SaveImage:
-                    SaveQrImage(duckGoSearchResult);
+                    SaveQrImage(duckGoSearchResult, default);
                     break;
 
                 default:

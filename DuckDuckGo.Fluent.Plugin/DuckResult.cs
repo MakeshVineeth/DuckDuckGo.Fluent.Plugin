@@ -15,9 +15,15 @@ public class DuckResult
 
     public override bool Equals(object obj)
     {
-        return obj is DuckResult duckResult && (duckResult.Info, duckResult.ResultType, duckResult.SourceUrl,
-            duckResult.SearchedText, duckResult.SearchResultType, duckResult.IsPinned).Equals((Info, ResultType,
-            SourceUrl, SearchedText, SearchResultType, IsPinned));
+        if (obj is not DuckResult duckResult) return false;
+
+        var t1 = (duckResult.Info, duckResult.ResultType, duckResult.SourceUrl,
+                duckResult.SearchedText, duckResult.SearchResultType, duckResult.IsPinned);
+
+        var t2 = (Info, ResultType,
+                SourceUrl, SearchedText, SearchResultType, IsPinned);
+
+        return t1 == t2;
     }
 
     public override int GetHashCode()

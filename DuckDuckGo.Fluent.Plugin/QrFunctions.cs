@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Media.Imaging;
@@ -65,7 +66,7 @@ public class QrFunctions
         };
     }
 
-    public static void SaveQrImage(DuckDuckGoSearchResult duckGoSearchResult)
+    public static void SaveQrImage(DuckDuckGoSearchResult duckGoSearchResult, CancellationToken cancellationToken)
     {
         if (duckGoSearchResult.PreviewImage is { IsEmpty: true }) return;
 
@@ -88,7 +89,7 @@ public class QrFunctions
                 if (!File.Exists(path)) return;
                 IProcessManager managerInstance = ProcessUtils.GetManagerInstance();
                 managerInstance.StartNewProcess(path);
-            });
-        }, DispatcherPriority.Input);
+            }, cancellationToken);
+        }, DispatcherPriority.Input, cancellationToken);
     }
 }

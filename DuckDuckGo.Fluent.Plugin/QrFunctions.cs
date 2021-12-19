@@ -23,7 +23,7 @@ public class QrFunctions
     public static async Task<DuckDuckGoSearchResult> GetQrImage(string searchedText)
     {
         string url = GetEndpointUrl(searchedText, true);
-        DuckDuckGoApiResult apiResult = await HttpCalls.GetApiResult(url);
+        DuckDuckGoApiResult apiResult = await HttpCalls.GetApiResult(url, default);
 
         if (apiResult == null) return null;
 

@@ -57,7 +57,7 @@ internal class DuckDuckGoSearchApp : ISearchApplication
         {
             case SearchAction.Normal:
                 string url = GetEndpointUrl(searchedText);
-                DuckDuckGoApiResult apiResult = await HttpCalls.GetApiResult(url);
+                DuckDuckGoApiResult apiResult = await HttpCalls.GetApiResult(url, cancellationToken);
 
                 if (apiResult == null) yield break;
 
@@ -129,7 +129,7 @@ internal class DuckDuckGoSearchApp : ISearchApplication
         }
 
         string url = GetEndpointUrl(duckResult.SearchedText);
-        DuckDuckGoApiResult apiResult = await HttpCalls.GetApiResult(url);
+        DuckDuckGoApiResult apiResult = await HttpCalls.GetApiResult(url, default);
 
         if (apiResult == null) return default;
 

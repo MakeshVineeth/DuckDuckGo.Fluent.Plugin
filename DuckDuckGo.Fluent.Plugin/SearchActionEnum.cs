@@ -1,9 +1,8 @@
-﻿namespace DuckDuckGo.Fluent.Plugin
+﻿namespace DuckDuckGo.Fluent.Plugin;
+
+public enum SearchAction
 {
-    public enum SearchAction
-    {
-        Normal,
-        QrCode,
-        Null
-    }
+    Normal,
+    QrCode,
+    Null
 }

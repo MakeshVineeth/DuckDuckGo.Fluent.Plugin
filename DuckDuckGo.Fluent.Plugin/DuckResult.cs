@@ -25,6 +25,6 @@ public class DuckResult
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(Info, ResultType, SourceUrl, SearchedText, SearchResultType, IsPinned);
+        return HashCode.Combine(Info, ResultType, SourceUrl, SearchedText, SearchResultType);
     }
 }

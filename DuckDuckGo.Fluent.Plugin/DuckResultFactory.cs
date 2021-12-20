@@ -21,27 +21,35 @@ public class DuckResultFactory
         return new DuckResultFactory(root, searchedText);
     }
 
-    public DuckResult GetAnswer()
+    public DuckResult GetInstantAnswer(ResultType resultType)
     {
-        if (string.IsNullOrWhiteSpace(_apiResult.Answer)) return null;
-        string resultType = _apiResult.AnswerType ?? "Answer";
-        return CreateDuckResult(_apiResult.Answer, resultType, null, ResultType.Answer, true);
-    }
+        string info = string.Empty;
+        string resultTypeStr = string.Empty;
+        string sourceUrl = string.Empty;
 
-    public DuckResult GetDefinition()
-    {
-        return string.IsNullOrWhiteSpace(_apiResult.Definition)
-            ? null
-            : CreateDuckResult(_apiResult.Definition, "Define", _apiResult.DefinitionUrl, ResultType.Definition,
-                true);
-    }
+        switch (resultType)
+        {
+            case ResultType.Answer:
+                info = _apiResult.Answer;
+                resultTypeStr = _apiResult.AnswerType ?? "Answer";
+                sourceUrl = null;
+                break;
+            case ResultType.Definition:
+                info = _apiResult.Definition;
+                resultTypeStr = "Define";
+                sourceUrl = _apiResult.DefinitionUrl;
+                break;
+            case ResultType.Abstract:
+                info = _apiResult.AbstractText;
+                resultTypeStr = "Abstract";
+                sourceUrl = _apiResult.AbstractUrl;
+                break;
+        }
 
-    public DuckResult GetAbstract()
-    {
-        return string.IsNullOrWhiteSpace(_apiResult.AbstractText)
-            ? null
-            : CreateDuckResult(_apiResult.AbstractText, "Abstract", _apiResult.AbstractUrl, ResultType.Abstract,
-                true);
+        if (string.IsNullOrWhiteSpace(info)) return null;
+
+        return CreateDuckResult(info, resultTypeStr, sourceUrl, resultType,
+            true);
     }
 
     public IEnumerable<DuckResult> GetRelatedTopics()

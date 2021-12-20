@@ -64,15 +64,15 @@ internal class DuckDuckGoSearchApp : ISearchApplication
                 var duckResultFactory = DuckResultFactory.Create(apiResult, searchedText);
 
                 // Get an Instant Answer
-                DuckResult answers = duckResultFactory.GetAnswer();
+                DuckResult answers = duckResultFactory.GetInstantAnswer(ResultType.Answer);
                 if (answers != null) yield return GetISearchResult(answers);
 
                 // Get Definitions if available
-                DuckResult dictionary = duckResultFactory.GetDefinition();
+                DuckResult dictionary = duckResultFactory.GetInstantAnswer(ResultType.Definition);
                 if (dictionary != null) yield return GetISearchResult(dictionary);
 
                 // Get Abstract in Text form
-                DuckResult abstractResult = duckResultFactory.GetAbstract();
+                DuckResult abstractResult = duckResultFactory.GetInstantAnswer(ResultType.Abstract);
                 if (abstractResult != null)
                     yield return GetISearchResult(abstractResult);
 
@@ -138,8 +138,8 @@ internal class DuckDuckGoSearchApp : ISearchApplication
         DuckResult result = duckResult.SearchResultType switch
         {
             ResultType.Answer => duckResult, // Answers will often have numerical computations and are not suitable for custom tags as they often update very frequently.
-            ResultType.Definition => duckResultFactory.GetDefinition(),
-            ResultType.Abstract => duckResultFactory.GetAbstract(),
+            ResultType.Definition => duckResultFactory.GetInstantAnswer(ResultType.Definition),
+            ResultType.Abstract => duckResultFactory.GetInstantAnswer(ResultType.Abstract),
             ResultType.QrCode => null,
             ResultType.SearchResult => duckResult,
             _ => null

@@ -173,12 +173,7 @@ internal class DuckDuckGoSearchApp : ISearchApplication
                     return default;
             }
         }
-        else if (duckGoSearchResult.SelectedOperation.OperationName == CopyUrl.OperationName)
-        {
-            if (!string.IsNullOrWhiteSpace(url))
-                Clipboard.SetText(url);
-        }
-        else if (duckGoSearchResult.SelectedOperation.OperationName == CopyContents.OperationName)
+        else if (duckGoSearchResult.SelectedOperation.OperationName.Equals(CopyContents.OperationName))
         {
             if (!string.IsNullOrWhiteSpace(duckGoSearchResult.ResultName))
                 Clipboard.SetText(duckGoSearchResult.ResultName);

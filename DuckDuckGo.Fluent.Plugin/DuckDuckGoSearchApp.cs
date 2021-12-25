@@ -11,7 +11,6 @@ using Blast.API.Processes;
 using Blast.Core.Interfaces;
 using Blast.Core.Objects;
 using Blast.Core.Results;
-using TextCopy;
 using static DuckDuckGo.Fluent.Plugin.DuckDuckGoSearchResult;
 using static DuckDuckGo.Fluent.Plugin.JsonResult;
 using static DuckDuckGo.Fluent.Plugin.AppFunctions;

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Blast.API.Search;
 using static DuckDuckGo.Fluent.Plugin.JsonResult;
 using static DuckDuckGo.Fluent.Plugin.AppFunctions;
 
@@ -49,7 +48,7 @@ public class DuckResultFactory
 
         if (string.IsNullOrWhiteSpace(info)) return null;
 
-        double score = info.SearchDistanceScore(_searchedText) * 10;
+        double score = 20;
         return CreateDuckResult(info, resultTypeStr, sourceUrl, resultType, score);
     }
 
@@ -63,7 +62,7 @@ public class DuckResultFactory
             if (!string.IsNullOrWhiteSpace(variableTopic.Text))
             {
                 string description = variableTopic.Text;
-                double score = description.SearchDistanceScore(_searchedText);
+                double score = 5;
                 yield return CreateDuckResult(description, "Related", variableTopic.FirstUrl,
                     ResultType.SearchResult, score);
             }
@@ -91,7 +90,7 @@ public class DuckResultFactory
         foreach (RelatedTopic externalTopic in _apiResult.Results)
         {
             string description = externalTopic.Text;
-            double score = 3;
+            double score = 10;
             yield return CreateDuckResult(description, "Links", externalTopic.FirstUrl,
                 ResultType.SearchResult, score);
         }

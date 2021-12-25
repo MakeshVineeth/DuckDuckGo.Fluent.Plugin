@@ -11,7 +11,7 @@ public class DuckResult
     public string SourceUrl { get; set; }
     public string SearchedText { get; set; }
     public ResultType SearchResultType { get; set; }
-    public bool IsPinned { get; set; }
+    public double Score { get; set; }
 
     public override bool Equals(object obj)
     {

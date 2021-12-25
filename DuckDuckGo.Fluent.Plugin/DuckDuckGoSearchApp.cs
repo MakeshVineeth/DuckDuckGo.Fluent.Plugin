@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
 using Blast.API.Core.Processes;
 using Blast.API.Processes;
-using Blast.API.Search;
 using Blast.Core.Interfaces;
 using Blast.Core.Objects;
 using Blast.Core.Results;
@@ -173,23 +172,18 @@ internal class DuckDuckGoSearchApp : ISearchApplication
                     return default;
             }
         }
-        else if (duckGoSearchResult.SelectedOperation.OperationName.Equals(CopyContents.OperationName))
-        {
-            if (!string.IsNullOrWhiteSpace(duckGoSearchResult.ResultName))
-                Clipboard.SetText(duckGoSearchResult.ResultName);
-        }
 
         return new ValueTask<IHandleResult>(new HandleResult(true, false));
     }
 
     private DuckDuckGoSearchResult GetISearchResult(DuckResult duckResult)
     {
-        double score = duckResult.Info.SearchDistanceScore(duckResult.SearchedText);
+        double score = duckResult.Score;
         return new DuckDuckGoSearchResult(duckResult.Info, duckResult.SearchedText, duckResult.ResultType,
             DuckOperations, score, duckResult)
         {
             Url = duckResult.SourceUrl, AdditionalInformation = duckResult.SourceUrl,
-            PreviewImage = _logoImage, IsPinned = duckResult.IsPinned
+            PreviewImage = _logoImage
         };
     }
 }

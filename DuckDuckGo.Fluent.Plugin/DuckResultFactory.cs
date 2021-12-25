@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Blast.API.Search;
 using static DuckDuckGo.Fluent.Plugin.JsonResult;
 using static DuckDuckGo.Fluent.Plugin.AppFunctions;
 
@@ -48,8 +49,8 @@ public class DuckResultFactory
 
         if (string.IsNullOrWhiteSpace(info)) return null;
 
-        return CreateDuckResult(info, resultTypeStr, sourceUrl, resultType,
-            true);
+        double score = info.SearchDistanceScore(_searchedText) * 10;
+        return CreateDuckResult(info, resultTypeStr, sourceUrl, resultType, score);
     }
 
     public IEnumerable<DuckResult> GetRelatedTopics()
@@ -60,18 +61,26 @@ public class DuckResultFactory
                      variableTopic != null))
         {
             if (!string.IsNullOrWhiteSpace(variableTopic.Text))
-                yield return CreateDuckResult(variableTopic.Text, "Related", variableTopic.FirstUrl,
-                    ResultType.SearchResult);
+            {
+                string description = variableTopic.Text;
+                double score = description.SearchDistanceScore(_searchedText);
+                yield return CreateDuckResult(description, "Related", variableTopic.FirstUrl,
+                    ResultType.SearchResult, score);
+            }
 
             if (variableTopic.Topics == null) continue;
 
             foreach (Topic topic in variableTopic.Topics)
+            {
+                string description = topic.Text;
+                double score = 5;
                 yield return CreateDuckResult(
-                    topic.Text,
+                    description,
                     variableTopic.Name,
                     topic.FirstUrl,
-                    ResultType.SearchResult
+                    ResultType.SearchResult, score
                 );
+            }
         }
     }
 
@@ -80,12 +89,16 @@ public class DuckResultFactory
         if (_apiResult.Results == null) yield break;
 
         foreach (RelatedTopic externalTopic in _apiResult.Results)
-            yield return CreateDuckResult(externalTopic.Text, "Links", externalTopic.FirstUrl,
-                ResultType.SearchResult);
+        {
+            string description = externalTopic.Text;
+            double score = 3;
+            yield return CreateDuckResult(description, "Links", externalTopic.FirstUrl,
+                ResultType.SearchResult, score);
+        }
     }
 
     private DuckResult CreateDuckResult(string info, string resultType, string sourceUrl,
-        ResultType searchResultType, bool isPinned = false)
+        ResultType searchResultType, double score)
     {
         if (string.IsNullOrWhiteSpace(sourceUrl) && !string.IsNullOrWhiteSpace(_searchedText))
             sourceUrl = GetGeneralizedUrl(_searchedText);
@@ -97,7 +110,7 @@ public class DuckResultFactory
             SearchResultType = searchResultType,
             SourceUrl = sourceUrl,
             SearchedText = _searchedText,
-            IsPinned = isPinned
+            Score = score
         };
     }
 }

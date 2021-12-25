@@ -16,10 +16,10 @@ public sealed class DuckDuckGoSearchResult : SearchResultBase
     public const string DuckTagDescription = "Show DuckDuckGo Instant Answers";
     public const string SearchResultIcon = "\uF78B";
 
-    public static readonly CopySearchOperationSelfRun CopyUrl = new("Copy URL")
+    private static readonly CopySearchOperationSelfRun CopyUrl = new("Copy URL")
         { Description = "Copies the URL to Clipboard.", KeyGesture = new KeyGesture(Key.None) };
 
-    public static readonly CopySearchOperationSelfRun CopyContents = new("Copy Contents")
+    public static readonly CopySearchOperation CopyContents = new("Copy Contents")
     {
         Description = "Copies the Content of the Result"
     };

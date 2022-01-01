@@ -48,7 +48,7 @@ public class DuckResultFactory
 
         if (string.IsNullOrWhiteSpace(info)) return null;
 
-        double score = 20;
+        double score = 40;
         return CreateDuckResult(info, resultTypeStr, sourceUrl, resultType, score);
     }
 
@@ -90,7 +90,7 @@ public class DuckResultFactory
         foreach (RelatedTopic externalTopic in _apiResult.Results)
         {
             string description = externalTopic.Text;
-            double score = 10;
+            double score = 20;
             yield return CreateDuckResult(description, "Links", externalTopic.FirstUrl,
                 ResultType.SearchResult, score);
         }

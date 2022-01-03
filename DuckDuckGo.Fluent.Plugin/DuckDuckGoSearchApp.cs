@@ -11,6 +11,7 @@ using Blast.API.Processes;
 using Blast.Core.Interfaces;
 using Blast.Core.Objects;
 using Blast.Core.Results;
+using TextCopy;
 using static DuckDuckGo.Fluent.Plugin.DuckDuckGoSearchResult;
 using static DuckDuckGo.Fluent.Plugin.JsonResult;
 using static DuckDuckGo.Fluent.Plugin.AppFunctions;
@@ -170,6 +171,11 @@ internal class DuckDuckGoSearchApp : ISearchApplication
                 default:
                     return default;
             }
+        }
+        else if (duckGoSearchResult.SelectedOperation.OperationName.Equals(CopyContents.OperationName))
+        {
+            if (!string.IsNullOrWhiteSpace(duckGoSearchResult.ResultName))
+                Clipboard.SetText(duckGoSearchResult.ResultName);
         }
 
         return new ValueTask<IHandleResult>(new HandleResult(true, false));

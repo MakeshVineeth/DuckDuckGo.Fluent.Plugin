@@ -1,14 +1,1 @@
-{
-    "IsEnabled": true,
-    "InstalledVersion": "2.0.0.0",
-    "Name": "DuckInstantAnswers",
-    "DisplayName": "DuckDuckGo Preview",
-    "Description": "Show DuckDuckGo Instant Answers. Generate QR Codes.",
-    "PublisherName": "Makesh Vineeth",
-    "Version": "2.0.0.0",
-    "URL": "https://github.com/MakeshVineeth/DuckDuckGo.Fluent.Plugin",
-    "DownloadURL": "https://github.com/MakeshVineeth/DuckDuckGo.Fluent.Plugin/releases/download/",
-    "IconUrl": null,
-    "IconGlyph": "\uF78B",
-    "PreviewImage": null
-}
+{"IsEnabled":true,"InstalledVersion":"1.1.0.0","Name":"DuckInstantAnswers","DisplayName":"DuckDuckGo Preview","Description":"Show DuckDuckGo Instant Answers. Generate QR Codes.","PublisherName":"Makesh Vineeth","Version":"1.1.0.0","MinimumFluentSearchVersion":null,"URL":"https://github.com/MakeshVineeth/DuckDuckGo.Fluent.Plugin","DownloadURL":"https://github.com/MakeshVineeth/DuckDuckGo.Fluent.Plugin","IconUrl":null,"IconGlyph":"\uF78B"}
